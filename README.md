@@ -29,14 +29,14 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 ### 2. Установка пароля
 
 ```bash
-go run tools/genhash/main.go
+go run genhash.go
 ```
 
-Скопируйте вывод в константу `PasswordHash` в `cmd/server/main.go`.
+Скопируйте вывод в константу `PasswordHash` в `server.go`.
 
 ### 3. Адрес сервера
 
-В `cmd/client/main.go` замените:
+В `client.go` замените:
 ```go
 serverAddr = "yourip:8443"
 ```
@@ -45,11 +45,14 @@ serverAddr = "yourip:8443"
 
 ```bash
 # Сервер (Linux)
-go build -o server ./cmd/server
+$env:GOOS="linux"; $env:GOARCH="amd64"
+go build -o server server.go
 
 # Клиент
-go build -o client ./cmd/client              # Linux
-GOOS=windows go build -o client.exe ./cmd/client  # Windows
+go build -o client client.go              # Linux
+
+$env:GOOS=""; $env:GOARCH=""
+go build -o client.exe client.go  # Windows
 ```
 
 ## Что изменилось в v0.0.4
